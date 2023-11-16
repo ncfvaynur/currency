@@ -6,17 +6,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const currency1 = document.querySelectorAll(".currency1");
     const one = document.getElementsByName("one");
     const two = document.getElementsByName("two");
-    const rubl = document.getElementById("rubl");
-    const dollar = document.getElementById("dollar");
-    const euro = document.getElementById("euro");
-    const fs = document.getElementById("fs");
-    const rubl1 = document.getElementById("rubl1");
-    const dollar1 = document.getElementById("dollar1");
-    const euro1 = document.getElementById("euro1");
-    const fs1 = document.getElementById("fs1");
-    const list = document.querySelector(".list");
-    const heading = document.querySelector("h1");
-    
+
     // Functions
     let first;
     let second;
@@ -81,53 +71,6 @@ document.addEventListener("DOMContentLoaded", function () {
             });
     };
 
-    // Add event listener to the second input for input changes
-    secondInput.addEventListener("input", function () {
-        // Allow any input
-        calculateOnClassChangeReverse();
-    });
-    
-
-    // Add event listener to the first input for input changes
-    firstInput.addEventListener("input", function () {
-        // Allow any input
-        calculateOnClassChange();
-    });
-
-        // Add event listener to the second input for input changes
-        secondInput.addEventListener("input", function () {
-            // Allow only numbers and a dot (for decimal values)
-            const inputValue = secondInput.value.replace(/[^0-9.]/g, '');
-            secondInput.value = inputValue;
-    
-            calculateOnClassChangeReverse();
-        });
-    
-        // Add event listener to the first input for input changes
-        firstInput.addEventListener("input", function () {
-            // Allow only numbers and a dot (for decimal values)
-            const inputValue = firstInput.value.replace(/[^0-9.]/g, '');
-            firstInput.value = inputValue;
-    
-            calculateOnClassChange();
-        });
-        
-    // Add event listener to currency buttons for class change
-    currency.forEach(button => {
-        button.addEventListener("click", changeOfCurrencies);
-    });
-
-    currency1.forEach(button => {
-        button.addEventListener("click", changeOfCurrencies);
-    });
-
-    one.forEach(button => {
-        button.addEventListener("click", calculateOnClassChange);
-    });
-
-    firstInput.addEventListener("input", calculateOnClassChange);
-});
-
     const calculateOnClassChangeReverse = () => {
         one.forEach(item => {
             if (item.classList.contains("change")) {
@@ -149,7 +92,8 @@ document.addEventListener("DOMContentLoaded", function () {
             alert("Please enter a valid numeric value.");
             return;
         }
-fetch(`${url}/${key}/pair/${second}/${first}/${input1}`)
+
+        fetch(`${url}/${key}/pair/${second}/${first}/${input1}`)
             .then(r => r.json())
             .then((data) => {
                 firstInput.value = data.conversion_result.toFixed(2);
@@ -169,3 +113,35 @@ fetch(`${url}/${key}/pair/${second}/${first}/${input1}`)
                 console.log("Internet bağlantınızı kontrol edin");
             });
     };
+
+        // Add event listener to the second input for input changes
+        secondInput.addEventListener("input", function () {
+            // Allow only numbers and a dot (for decimal values)
+            const inputValue = secondInput.value.replace(/[^0-9.]/g, '');
+            secondInput.value = inputValue;
+
+            calculateOnClassChangeReverse();
+        });
+
+        // Add event listener to the first input for input changes
+        firstInput.addEventListener("input", function () {
+            // Allow only numbers and a dot (for decimal values)
+            const inputValue = firstInput.value.replace(/[^0-9.]/g, '');
+            firstInput.value = inputValue;
+
+            calculateOnClassChange();
+        });
+
+        // Add event listener to currency buttons for class change
+        currency.forEach(button => {
+            button.addEventListener("click", changeOfCurrencies);
+        });
+
+        currency1.forEach(button => {
+            button.addEventListener("click", changeOfCurrencies);
+        });
+
+        one.forEach(button => {
+            button.addEventListener("click", calculateOnClassChange);
+        });
+    });
