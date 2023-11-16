@@ -84,7 +84,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Add event listener to the second input for input changes
     secondInput.addEventListener("input", function () {
         // Allow any input
-        calculateOnClassChange();
+        calculateOnClassChangeReverse();
     });
     
 
@@ -100,7 +100,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const inputValue = secondInput.value.replace(/[^0-9.]/g, '');
             secondInput.value = inputValue;
     
-            calculateOnClassChange();
+            calculateOnClassChangeReverse();
         });
     
         // Add event listener to the first input for input changes
@@ -127,3 +127,45 @@ document.addEventListener("DOMContentLoaded", function () {
 
     firstInput.addEventListener("input", calculateOnClassChange);
 });
+
+    const calculateOnClassChangeReverse = () => {
+        one.forEach(item => {
+            if (item.classList.contains("change")) {
+                first = item.innerText;
+            }
+        });
+
+        two.forEach(item => {
+            if (item.classList.contains("change")) {
+                second = item.innerText;
+            }
+        });
+
+        const url = "https://v6.exchangerate-api.com/v6";
+        const key = '8732f75239e1f369e3a9d869';
+        let input1 = Number(secondInput.value);
+
+        if (!isNumeric(input1)) {
+            alert("Please enter a valid numeric value.");
+            return;
+        }
+fetch(`${url}/${key}/pair/${second}/${first}/${input1}`)
+            .then(r => r.json())
+            .then((data) => {
+                firstInput.value = data.conversion_result.toFixed(2);
+
+                // Display exchange rate in the "exchange-rate" paragraph
+                const exchangeRateParagraph = document.querySelector(".exchange-rate");
+                exchangeRateParagraph.textContent = `Exchange Rate: 1 ${first} = ${data.conversion_rate} ${second}`;
+
+                const exchangeRateParagraph2 = document.querySelector(".exchange-rate1");
+                exchangeRateParagraph2.textContent = `Exchange Rate: 1 ${second} = ${1 / data.conversion_rate} ${first}`;
+
+                console.log(data.conversion_result);
+                console.log(data);
+            })
+            .catch(error => {
+                alert("Internet bağlantınızı kontrol edin");
+                console.log("Internet bağlantınızı kontrol edin");
+            });
+    };
