@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const fs1 = document.getElementById("fs1");
     const list = document.querySelector(".list");
     const heading = document.querySelector("h1");
-
+    
     // Functions
     let first;
     let second;
@@ -33,6 +33,10 @@ document.addEventListener("DOMContentLoaded", function () {
             calculateOnClassChange();
         }
     }
+
+    const isNumeric = (value) => {
+        return !isNaN(parseFloat(value)) && isFinite(value);
+    };
 
     const calculateOnClassChange = () => {
         one.forEach(item => {
@@ -51,11 +55,23 @@ document.addEventListener("DOMContentLoaded", function () {
         const key = '8732f75239e1f369e3a9d869';
         let input1 = Number(firstInput.value);
 
-        // fetch(`${url}?access_key=${key}&from=${first}&to=${second}&amount=${input1}`)
+        if (!isNumeric(input1)) {
+            alert("Please enter a valid numeric value.");
+            return;
+        }
+
         fetch(`${url}/${key}/pair/${first}/${second}/${input1}`)
             .then(r => r.json())
             .then((data) => {
                 secondInput.value = data.conversion_result.toFixed(2);
+
+                // Display exchange rate in the "exchange-rate" paragraph
+                const exchangeRateParagraph = document.querySelector(".exchange-rate");
+                exchangeRateParagraph.textContent = `Exchange Rate: 1 ${first} = ${data.conversion_rate} ${second}`;
+
+                const exchangeRateParagraph2 = document.querySelector(".exchange-rate1");
+                exchangeRateParagraph2.textContent = `Exchange Rate: 1 ${second} = ${1 / data.conversion_rate} ${first}`;
+
                 console.log(data.conversion_result);
                 console.log(data);
             })
@@ -65,6 +81,37 @@ document.addEventListener("DOMContentLoaded", function () {
             });
     };
 
+    // Add event listener to the second input for input changes
+    secondInput.addEventListener("input", function () {
+        // Allow any input
+        calculateOnClassChange();
+    });
+    
+
+    // Add event listener to the first input for input changes
+    firstInput.addEventListener("input", function () {
+        // Allow any input
+        calculateOnClassChange();
+    });
+
+        // Add event listener to the second input for input changes
+        secondInput.addEventListener("input", function () {
+            // Allow only numbers and a dot (for decimal values)
+            const inputValue = secondInput.value.replace(/[^0-9.]/g, '');
+            secondInput.value = inputValue;
+    
+            calculateOnClassChange();
+        });
+    
+        // Add event listener to the first input for input changes
+        firstInput.addEventListener("input", function () {
+            // Allow only numbers and a dot (for decimal values)
+            const inputValue = firstInput.value.replace(/[^0-9.]/g, '');
+            firstInput.value = inputValue;
+    
+            calculateOnClassChange();
+        });
+        
     // Add event listener to currency buttons for class change
     currency.forEach(button => {
         button.addEventListener("click", changeOfCurrencies);
@@ -73,9 +120,6 @@ document.addEventListener("DOMContentLoaded", function () {
     currency1.forEach(button => {
         button.addEventListener("click", changeOfCurrencies);
     });
-
-    // Add event listener to the second input for input changes
-    secondInput.addEventListener("input", calculateOnClassChange);
 
     one.forEach(button => {
         button.addEventListener("click", calculateOnClassChange);
